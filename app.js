@@ -2,6 +2,7 @@ const express = require("express"); //esto es lo mismo q hacerlo en const expres
 const path = require("path");
 const app = express();
 
+// setup static and mniddleware
 app.use(express.static("./public"));
 
 app.get("/", (req, res) => {
