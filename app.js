@@ -29,7 +29,12 @@ app.get("/api/products/:productID", (req, res) => {
 
 app.get("/api/products/:productID/reviews/:reviewID", (req, res) => {
   console.log(req.params);
-  res.send("Hello lolo");
+  res.send("Review");
+});
+
+app.get("/api/v1/query", (req, res) => {
+  console.log(req.query);
+  res.send("hola query");
 });
 
 app.listen(5000, () => {
