@@ -1,36 +1,35 @@
 const express = require("express");
 const app = express();
-const morgan = require("morgan");
-const logger = require("./logger-MiddleWare");
-const authorice = require("./authorize");
+let { people } = require("./data");
 
-// req => middleware => res ...  llega la req, hacemos algo y luego mandamos el res
+// static assets
+app.use(express.static("./methods-public"));
+// parse form data
+app.use(express.urlencoded({ extended: false })); //para poder postear
+// parse json
+app.use(express.json());
 
-// 1.- use vs route
-// 2.- option - our own -como logger-/ express -como static- / third party - como morgan-
-
-// app.use("/api", [logger, authorice]); // si esta primero se invoca en todas las rutas ......y si tiene una ruta todas las que la contengan lo van a tener en este caso con items y products --- si esta sin ruta se invoca en todoos los requests --- si son varias van en un array
-
-// app.use(express.static('./public'))  // esto hace express
-
-// third party middleware option - popular morgan - npm i morgan
-app.use(morgan("tiny")); // tira el mothod, el ur, codigo y time ms que tardo la respuesta - :method :url :status :res[content-length] - :response-time ms - segun su documentation en su pagina web
-
-app.get("/", (req, res) => {
-  res.send("Home");
+app.get("/api/people", (req, res) => {
+  res.status(200).json({ success: true, data: people });
 });
 
-app.get("/about", (req, res) => {
-  res.send("about");
+app.post("/api/people", (req, res) => {
+  const { name } = req.body;
+  if (!name) {
+    return res
+      .status(400)
+      .json({ success: false, msg: "please provide name value" });
+  }
+  res.status(201).json({ success: true, person: name });
 });
 
-app.get("/api/products", [logger, authorice], (req, res) => {
-  res.send("products");
-});
-
-app.get("/api/items", [logger, authorice], (req, res) => {
-  console.log(req.user);
-  res.send("items");
+app.post("/login", (req, res) => {
+  // console.log(req.body);
+  const { name } = req.body;
+  if (name) {
+    return res.status(200).send(`welcome ${name}`);
+  }
+  return res.status(401).send("Please Provide name");
 });
 
 app.listen(5000, () => {
