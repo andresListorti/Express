@@ -12,7 +12,6 @@ app.use(express.json());
 
 // router
 app.use("/api/people", people);
-
 // login
 app.use("/login", login);
 
